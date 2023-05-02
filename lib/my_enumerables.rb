@@ -1,127 +1,116 @@
-require "pry-byebug"
 module Enumerable
+  # Your code goes here
 
   def my_each_with_index
     if block_given?
       i = 0
-      while i < self.length
-      el = self[i]
-      yield(el, i)
-      i += 1
+      self.my_each do |el| 
+        yield(el, i)
+        i += 1
       end
     end
-    return self
+    self
   end
 
   def my_select
-    sel = []
+    array = []
     if block_given?
-      i = 0
-      while i < self.length
-      el = self[i]
-      if yield(el) == true
-      sel << self[i]
+      self.my_each do |el|
+        if yield(el) == true
+          array << el
+        end
       end
-      i += 1
-      end
+    array
     end
-    return sel
   end
 
   def my_all?
-    is_true = false
     if block_given?
-      i = 0
-      while i < self.length
-      el = self[i]
-      yield(el) == true ? (is_true = true) : (is_true = false)
-      i += 1
+      self.my_each do |el|
+        if yield(el)
+          true
+        else
+          return false
+        end
       end
+      true
     end
-    return is_true
   end
 
   def my_any?
-    is_true = false
     if block_given?
-      i = 0
-      while i < self.length
-      el = self[i]
-      yield(el) == true ? (is_true = true) : true
-      i += 1
+      self.my_each do |el|
+        if yield(el)
+          return true
+        end
       end
+      false
     end
-    return is_true
   end
 
   def my_none?
-    is_false = true
     if block_given?
-      i = 0
-      while i < self.length
-      el = self[i]
-      yield(el) == true ? (is_false = false) : false
-      i += 1
+      self.my_each do |el|
+        if yield(el)
+          return false
+        end
       end
+      true
     end
-    return is_false
   end
 
   def my_count
     count = 0
     if block_given?
-      i = 0
-      while i < self.length
-      el = self[i]
-      yield(el) == true ? (count += 1) : true
-      i += 1
+      self.my_each do |element|
+        count += 1 if yield(element)
       end
-      return count
+    else
+      count = self.length
     end
-    return self.length
+    count
   end
 
   def my_map
-    map = []
+    array = []
     if block_given?
-      i = 0
-      while i < self.length
-      el = self[i]
-      map << yield(el)
-      i += 1
+      self.my_each do |el|
+        array << yield(el)
       end
-    return map
     end
+    array
   end
-
+  
   def my_inject(initial)
     sum = initial
     if block_given?
       i = 0
       while i < self.length
-      el = self[i]
-      sum = yield(el, sum)
-      i += 1
+        el = self[i]
+        sum = yield(el, sum)
+        i += 1
       end
-    return sum
     end
+    sum
   end
-
 end
+
 # You will first have to define my_each
 # on the Array class. Methods defined in
 # your enumerable module will have access
 # to this method
 class Array
+  # Define my_each here
+
   def my_each
     if block_given?
       i = 0
       while i < self.length
-      el = self[i]
-      yield(el)
-      i += 1
+        el = self[i]
+        i += 1
+        yield(el)
       end
     end
-    return self
+    self
   end
 end
